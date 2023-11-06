@@ -4,8 +4,6 @@ workflows:
     subclass: WDL
     publish: True
     primaryDescriptorPath: /rnaseq/RNA_preprocessing_pipeline.wdl
-    testParameterFiles: 
-      - /rnaseq/test_data/inputs_hg38_STAR_fusion.json
     authors:
       - name: xliu
         email: xliu@whitelabgx.com
