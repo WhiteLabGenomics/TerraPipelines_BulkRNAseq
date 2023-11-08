@@ -1,17 +1,15 @@
-version 1.0
 task fastqc {
-    input {
-        File fastq1
-        File fastq2
 
-        Float memory = 4
-        Int disk_space = 5*ceil(size(fastq1, "GiB")) + 8
-        Int num_threads = 1
-        Int? num_preempt
+    File fastq1
+    File? fastq2
 
-        String fastq1_name = sub(sub(basename(fastq1), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
-        String fastq2_name = sub(sub(basename(fastq2), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
-    }
+    Float memory
+    Int disk_space
+    Int num_threads
+    Int num_preempt
+
+    String fastq1_name = sub(sub(basename(fastq1), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
+    String fastq2_name = sub(sub(basename(fastq2), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
 
     command <<<
         set -euo pipefail
@@ -44,24 +42,6 @@ task fastqc {
     }
 }
 
-
 workflow fastqc_workflow {
-    input {
-        File fastq1
-        File fastq2
-    }
-
-    call fastqc {
-        input:
-            fastq1 = fastq1,
-            fastq2 = fastq2
-    }
-
-    output {
-        File htmlReport_fastq1 = fastqc.fastq1_fastqc_html
-        File reportZi_fastq1 = fastqc.fastq1_fastqc_zip
-        File htmlReport_fastq2 = fastqc.fastq2_fastqc_html
-        File reportZi_fastq2 = fastqc.fastq2_fastqc_zip
-    }
+    call fastqc
 }
-

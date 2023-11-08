@@ -26,29 +26,24 @@ workflow RNA_preprocessing_pipeline {
 
   }
 
-  call fastqc_task.fastqc_workflow as raw_read_qc {
-    input:
-      fastq1 = fastq1,
-      fastq2 = fastq2
-  }
-
-  call fastp_task.fastp_workflow as fastp {
-    input:
-      read1 = fastq1,
-      read2 = fastq2,
-      outputPathR1 = "./~{sample_id}_1.fq.gz",
-      outputPathR2 = "./~{sample_id}_2.fq.gz",
-      htmlPath = "./~{sample_id}_fastp.html",
-      jsonPath = "./~{sample_id}_fastp.json"
+  call fastp_task.Fastp as fastp {
+      input:
+        fastq1 = fastq1,
+        fastq2 = fastq2,
+        output_prefix = sample_id
     }
 
-  call fastqc_task.fastqc_workflow as cleaned_read_qc {
+  call fastqc_task.fastqc as cleaned_fastqc1 {
     input:
-      fastq1 = fastp.fastq1_clipped,
-      fastq2 = fastp.fastq2_clipped
+      seqFile=fastp.fastq1_clipped,
   }
 
-  call star_task.star_workflow as star {
+  call fastqc_task.fastqc as cleaned_fastqc2 {
+    input:
+      seqFile=fastp.fastq2_clipped,
+  }
+
+  call star_task.star as star {
     input:
       prefix=sample_id,
       fastq1=fastp.fastq1_clipped,
@@ -67,28 +62,23 @@ workflow RNA_preprocessing_pipeline {
     input:
       transcriptome_bam=star.transcriptome_bam,
       prefix=sample_id,
-      rsem_reference=rsem_reference
+      rsem_reference=rsem_reference,
   }
 
 
   output {
-    #fastqc raw data
-    File raw_htmlReport1 = raw_read_qc.htmlReport_fastq1
-    File raw_reportZip1 = raw_read_qc.reportZi_fastq1
-    File raw_htmlReport2 = raw_read_qc.htmlReport_fastq2
-    File raw_reportZip2 = raw_read_qc.reportZi_fastq2
-
     #fastp
-    File fastq1_clipped = fastp.fastq1_clipped 
+    File monitoring_log = fastp.monitoring_log
+    File fastq1_clipped = fastp.fastq1_clipped
     File fastq2_clipped = fastp.fastq2_clipped
     File raport_json = fastp.raport_json
     File raport_html = fastp.raport_html
 
     #fastqc cleaned data
-    File cleaned_htmlReport1 = cleaned_read_qc.htmlReport_fastq1
-    File cleaned_reportZip1 = cleaned_read_qc.reportZi_fastq1
-    File cleaned_htmlReport2 = cleaned_read_qc.htmlReport_fastq2
-    File cleaned_reportZip2 = cleaned_read_qc.reportZi_fastq2
+    File cleaned_htmlReport1 = cleaned_fastqc1.htmlReport
+    File cleaned_reportZip1 = cleaned_fastqc1.reportZip
+    File cleaned_htmlReport2 = cleaned_fastqc2.htmlReport
+    File cleaned_reportZip2 = cleaned_fastqc2.reportZip
 
     #star
     File bam_file=star.bam_file
@@ -101,13 +91,12 @@ workflow RNA_preprocessing_pipeline {
     File junctions_pass1=star.junctions_pass1
     Array[File] logs=star.logs
 
-    #rnaseqc2
+    #rnaseqc
     File gene_tpm=rnaseqc2.gene_tpm
     File gene_counts=rnaseqc2.gene_counts
     File exon_counts=rnaseqc2.exon_counts
     File metrics=rnaseqc2.metrics
     File insertsize_distr=rnaseqc2.insertsize_distr
-    File gc_content=rnaseqc2.gc_content
 
     #rsem
     File genes=rsem.genes

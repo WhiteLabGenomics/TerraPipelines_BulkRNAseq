@@ -150,7 +150,7 @@ workflow star_workflow {
             fastq1 = fastq1,
             fastq2 = fastq2,
             prefix = prefix,
-            star_index = star_index, 
+            star_index = star_index
     }
     output {
         File bam_file = star.bam_file
