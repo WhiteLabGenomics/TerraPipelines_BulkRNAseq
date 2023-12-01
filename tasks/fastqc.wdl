@@ -60,8 +60,10 @@ workflow fastqc_workflow {
     output {
         File htmlReport_fastq1 = fastqc.fastq1_fastqc_html
         File reportZi_fastq1 = fastqc.fastq1_fastqc_zip
+        File fastqc_data_fastq1 = fastqc.fastq1_fastqc_data
         File htmlReport_fastq2 = fastqc.fastq2_fastqc_html
         File reportZi_fastq2 = fastqc.fastq2_fastqc_zip
+        File fastqc_data_fastq2 = fastqc.fastq2_fastqc_data
     }
 }
 
