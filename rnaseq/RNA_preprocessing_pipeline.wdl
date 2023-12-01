@@ -30,7 +30,7 @@ workflow RNA_preprocessing_pipeline {
     input:
       fastq1 = fastq1,
       fastq2 = fastq2
-  }
+    }
 
   call fastp_task.fastp_workflow as fastp {
     input:

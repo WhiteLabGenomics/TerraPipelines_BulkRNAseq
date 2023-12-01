@@ -7,7 +7,7 @@ task fastqc {
         Float memory = 4
         Int disk_space = 5*ceil(size(fastq1, "GiB")) + 8
         Int num_threads = 1
-        Int? num_preempt =2
+        Int num_preempt = 0
 
         String fastq1_name = sub(sub(basename(fastq1), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
         String fastq2_name = sub(sub(basename(fastq2), "\\.fastq.gz$", ""), "\\.fq.gz$", "" )
