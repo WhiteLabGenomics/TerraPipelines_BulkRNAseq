@@ -26,11 +26,15 @@ workflow RNA_preprocessing_pipeline {
 
   }
 
-  call fastqc_task.fastqc_workflow as raw_read_qc {
+  call fastqc_task.fastqc as raw_fastqc1 {
     input:
-      fastq1 = fastq1,
-      fastq2 = fastq2
-    }
+      seqFile=fastq1
+  }
+
+  call fastqc_task.fastqc as raw_fastqc2 {
+    input:
+      seqFile=fastq2
+  }
 
   call fastp_task.fastp_workflow as fastp {
     input:
@@ -42,11 +46,16 @@ workflow RNA_preprocessing_pipeline {
       jsonPath = "./~{sample_id}_fastp.json"
     }
 
-  call fastqc_task.fastqc_workflow as cleaned_read_qc {
+  call fastqc_task.fastqc as cleaned_fastqc1 {
     input:
-      fastq1 = fastp.fastq1_clipped,
-      fastq2 = fastp.fastq2_clipped
+      seqFile=fastp.fastq1_clipped
   }
+
+  call fastqc_task.fastqc as cleaned_fastqc2 {
+    input:
+      seqFile=fastp.fastq2_clipped
+  }
+
 
   call star_task.star_workflow as star {
     input:
@@ -73,10 +82,10 @@ workflow RNA_preprocessing_pipeline {
 
   output {
     #fastqc raw data
-    File raw_htmlReport1 = raw_read_qc.htmlReport_fastq1
-    File raw_reportZip1 = raw_read_qc.reportZi_fastq1
-    File raw_htmlReport2 = raw_read_qc.htmlReport_fastq2
-    File raw_reportZip2 = raw_read_qc.reportZi_fastq2
+    File raw_htmlReport1 = raw_fastqc1.htmlReport
+    File raw_reportZip1 = raw_fastqc1.reportZip
+    File raw_htmlReport2 = raw_fastqc2.htmlReport
+    File raw_reportZip2 = raw_fastqc2.reportZip
 
     #fastp
     File fastq1_clipped = fastp.fastq1_clipped 
@@ -85,10 +94,10 @@ workflow RNA_preprocessing_pipeline {
     File raport_html = fastp.raport_html
 
     #fastqc cleaned data
-    File cleaned_htmlReport1 = cleaned_read_qc.htmlReport_fastq1
-    File cleaned_reportZip1 = cleaned_read_qc.reportZi_fastq1
-    File cleaned_htmlReport2 = cleaned_read_qc.htmlReport_fastq2
-    File cleaned_reportZip2 = cleaned_read_qc.reportZi_fastq2
+    File cleaned_htmlReport1 = cleaned_fastqc1.htmlReport
+    File cleaned_reportZip1 = cleaned_fastqc1.reportZip
+    File cleaned_htmlReport2 = cleaned_fastqc2.htmlReport
+    File cleaned_reportZip2 = cleaned_fastqc2.reportZip
 
     #star
     File bam_file=star.bam_file
