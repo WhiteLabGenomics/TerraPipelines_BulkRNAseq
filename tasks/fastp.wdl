@@ -91,8 +91,8 @@ task Fastp {
     output {
         File htmlReport = htmlPath
         File jsonReport = jsonPath
-        File clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
-        File clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
+        Array[File] clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
+        Array[File] clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
     }
 
     runtime {
@@ -147,8 +147,8 @@ workflow fastp_workflow {
     }
 
     output {
-    File fastq1_clipped = Fastp.clippedR1
-    File fastq2_clipped = Fastp.clippedR2
+    Array[File] fastq1_clipped = Fastp.clippedR1
+    Array[File] fastq2_clipped = Fastp.clippedR2
     File raport_json = Fastp.jsonReport
     File raport_html = Fastp.htmlReport
     }
