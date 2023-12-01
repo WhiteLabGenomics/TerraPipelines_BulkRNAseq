@@ -26,8 +26,7 @@ task Fastp {
     input {
         File read1
         File read2
-        String sample_id
-        String outputPathR1 
+        String outputPathR1
         String outputPathR2
         String htmlPath
         String jsonPath
@@ -91,8 +90,8 @@ task Fastp {
     output {
         File htmlReport = htmlPath
         File jsonReport = jsonPath
-        File clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
-        File clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
+        Array[File] clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
+        Array[File] clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
     }
 
     runtime {
@@ -128,7 +127,6 @@ workflow fastp_workflow {
     input {
         File read1
         File read2
-        String sample_id
         String outputPathR1 
         String outputPathR2
         String htmlPath
@@ -139,7 +137,6 @@ workflow fastp_workflow {
         input:
             read1 = read1,
             read2 = read2,
-            sample_id = sample_id,
             outputPathR1 = outputPathR1,
             outputPathR2 = outputPathR2,
             htmlPath = htmlPath,
@@ -147,8 +144,8 @@ workflow fastp_workflow {
     }
 
     output {
-    File fastq1_clipped = Fastp.clippedR1
-    File fastq2_clipped = Fastp.clippedR2
+    File fastq1_clipped = Fastp.clippedR1[0]
+    File fastq2_clipped = Fastp.clippedR2[0]
     File raport_json = Fastp.jsonReport
     File raport_html = Fastp.htmlReport
     }

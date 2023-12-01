@@ -79,8 +79,8 @@ workflow RNA_preprocessing_pipeline {
     File raw_reportZip2 = raw_read_qc.reportZi_fastq2
 
     #fastp
-    Array[File] fastq1_clipped = fastp.fastq1_clipped 
-    Array[File] fastq2_clipped = fastp.fastq2_clipped
+    File fastq1_clipped = fastp.fastq1_clipped 
+    File fastq2_clipped = fastp.fastq2_clipped
     File raport_json = fastp.raport_json
     File raport_html = fastp.raport_html
 
