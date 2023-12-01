@@ -91,10 +91,8 @@ task Fastp {
     output {
         File htmlReport = htmlPath
         File jsonReport = jsonPath
-        File clippedR1 = if defined(effectiveSplit) then File(read_string("r1_paths")) else File(outputPathR1)
-        File clippedR2 = if defined(effectiveSplit) then File(read_string("r2_paths")) else File(outputPathR2)
-        #File clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
-        #File clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
+        File clippedR1 = if defined(effectiveSplit) then read_lines("r1_paths") else [outputPathR1]
+        File clippedR2 = if defined(effectiveSplit) then read_lines("r2_paths") else [outputPathR2]
     }
 
     runtime {
