@@ -147,8 +147,8 @@ workflow fastp_workflow {
     }
 
     output {
-    File  fastq1_clipped = Fastp.clippedR1[0]
-    File  fastq2_clipped = Fastp.clippedR2[0]
+    File fastq1_clipped = Fastp.clippedR1
+    File fastq2_clipped = Fastp.clippedR2
     File raport_json = Fastp.jsonReport
     File raport_html = Fastp.htmlReport
     }
