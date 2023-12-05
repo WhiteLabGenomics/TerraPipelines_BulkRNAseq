@@ -16,13 +16,13 @@ workflow RNA_preprocessing_pipeline {
     String sample_id
 
     #annotation GTF
-    File genes_gtf="gs://ccle_default_params/references_gtex_gencode.v29.GRCh38.ERCC.genes.collapsed_only.gtf"
+    File genes_gtf="gs://gtex-resources/GENCODE/gencode.v34.GRCh38.ERCC.genes.collapsed_only.gtf"
 
     #star_task index
-    File star_index="gs://ccle_default_params/STAR_genome_GRCh38_noALT_noHLA_noDecoy_ERCC_v29_oh100.tar.gz"
+    File star_index="gs://gtex-resources/STAR_genomes/STARv275a_genome_GRCh38_noALT_noHLA_noDecoy_ERCC_v34_oh100.tar.gz"
 
     #rsem index
-    File rsem_reference="gs://ccle_default_params/rsem_reference_GRCh38_gencode29_ercc.tar.gz"
+    File rsem_reference="gs://gtex-resources/RSEM_references/rsem_reference_GRCh38_gencode34_ercc.tar.gz"
 
   }
 
