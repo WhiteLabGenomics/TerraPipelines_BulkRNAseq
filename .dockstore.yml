@@ -1,0 +1,9 @@
+version: 1.2
+workflows:
+  - name: bulkRNA_workflow
+    subclass: WDL
+    publish: True
+    primaryDescriptorPath: /rnaseq/RNA_preprocessing_pipeline.wdl
+    authors:
+      - name: xliu
+        email: xliu@whitelabgx.com
